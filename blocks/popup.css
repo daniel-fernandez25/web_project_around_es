@@ -128,14 +128,15 @@
 
 /* error messages */
 
+/*error span*/
 .form__input-error {
   display: none;
   margin-top: 7px;
   color: #ff0000;
   font-size: 12px;
 }
-
-.form__input-error {
+/*makes error span visible*/
+.form__input-error-active {
   display: block;
 }
 
