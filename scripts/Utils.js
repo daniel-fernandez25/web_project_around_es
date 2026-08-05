@@ -3,24 +3,24 @@ import { FormValidator, config } from "./FormValidator.js";
 // edit profile
 const profilePageSection = document.querySelector(".profile.page__section"); //profile section page
 const editProfileButton = profilePageSection.querySelector(
-  ".profile__edit-button"
+  ".profile__edit-button",
 ); // edit profile button
 const editProfileModal = document.querySelector("#edit-popup"); // modal itself
 const editProfileForm = editProfileModal.querySelector("#edit-profile-form");
 const nameField = editProfileModal.querySelector(".popup__input_type_name");
 const descriptionField = editProfileModal.querySelector(
-  ".popup__input_type_description"
+  ".popup__input_type_description",
 );
 const profileName = profilePageSection.querySelector(".profile__title");
 const profileDescription = profilePageSection.querySelector(
-  ".profile__description"
+  ".profile__description",
 );
 // all page popups
 const popups = document.querySelectorAll(".popup");
 
 // edit profile
 editProfileButton.addEventListener("click", () =>
-  handleOpenEditModal(editProfileModal)
+  handleOpenEditModal(editProfileModal),
 );
 
 function handleOpenEditModal(modal) {
@@ -39,11 +39,11 @@ function handleProfileFormSubmit(e) {
   e.preventDefault();
   const nameInput = editProfileForm.querySelector(".popup__input_type_name");
   const descriptionInput = editProfileForm.querySelector(
-    ".popup__input_type_description"
+    ".popup__input_type_description",
   );
   profileName.textContent = nameInput.value;
   console.log(
-    `in profile: ${descriptionInput.value}; input: ${nameInput.value}`
+    `in profile: ${descriptionInput.value}; input: ${nameInput.value}`,
   );
   profileDescription.textContent = descriptionInput.value;
   // console.log(`in profile: ${profileDescription.textContent}`);
@@ -58,11 +58,12 @@ popups.forEach((popup) =>
     if (evt.target.classList.contains("popup__close")) {
       closeModal(popup);
     }
-  })
+  }),
 );
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
+  console.log(modal);
   // Attach the overlay click listener to the modal itself
   // This ensures clicks outside the popup trigger closing
   modal.addEventListener("click", overlayCloseModal);

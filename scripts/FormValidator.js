@@ -22,15 +22,16 @@ class FormValidator {
     // selecting the <span> tag associated with the input
     // which will contain the error message
     const errorSpan = this._formElement.querySelector(
-      `.${input.id}-input-error`
+      `.${input.id}-input-error`,
     );
     // adding the error message to the <span>
     errorSpan.textContent = input.validationMessage;
     errorSpan.classList.add(this._activeErrorClass);
   }
+
   _hideInputError(input) {
     const errorSpan = this._formElement.querySelector(
-      `.${input.id}-input-error`
+      `.${input.id}-input-error`,
     );
     // removing the red border from the field
     input.classList.remove(this._inputErrorClass);
@@ -50,7 +51,7 @@ class FormValidator {
 
   _toggleButtonState() {
     const allValid = Array.from(this._inputs).every(
-      (input) => input.validity.valid
+      (input) => input.validity.valid,
     );
     this._button.disabled = !allValid;
   }
