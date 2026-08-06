@@ -1,30 +1,25 @@
 class Card {
   constructor(data, templateSelector, handleCardClick) {
-    // Store the card data received from the initial cards array or from the form
+    // Store this card's data.
     this._name = data.name;
     this._link = data.link;
 
-    // Store the template selector so the class knows which HTML template to clone
+    // Store the template selector and the external image-click callback.
     this._templateSelector = templateSelector;
-
-    // Store the callback that will run when the card image is clicked
-    // This keeps Card loosely coupled from PopupWithImage
     this._handleCardClick = handleCardClick;
   }
 
   _getTemplate() {
-    // Find the template in the DOM, clone its card element, and return a new card
-    const cardElement = document
+    // Clone a fresh card element from the HTML template.
+    return document
       .querySelector(this._templateSelector)
       .content.querySelector(".card")
       .cloneNode(true);
-
-    return cardElement;
   }
 
   _setEventListeners() {
-    // When the image is clicked, send this card's data to the external callback
-    // Card does not open the popup directly
+    // Card does not know how the popup works. It only sends its data to the
+    // callback passed from index.js.
     this._cardImage.addEventListener("click", () => {
       this._handleCardClick({
         name: this._name,
@@ -32,48 +27,41 @@ class Card {
       });
     });
 
-    // Toggle the like button state
+    // Toggle the visual like state.
     this._likeButton.addEventListener("click", () => {
       this._handleLikeButton();
     });
 
-    // Remove the card from the page
+    // Remove this card from the DOM.
     this._deleteButton.addEventListener("click", () => {
       this._handleDeleteCard();
     });
   }
 
   _handleLikeButton() {
-    // Add or remove the active like class
     this._likeButton.classList.toggle("card__like-button_is-active");
   }
 
   _handleDeleteCard() {
-    // Remove this card element from the DOM
     this._cardElement.remove();
   }
 
   generateCard() {
-    // Create a new card element from the template
+    // Create the DOM element and store the child elements this class controls.
     this._cardElement = this._getTemplate();
-
-    // Store the card elements that will be updated or reused
     this._cardTitle = this._cardElement.querySelector(".card__title");
     this._cardImage = this._cardElement.querySelector(".card__image");
     this._likeButton = this._cardElement.querySelector(".card__like-button");
-    this._deleteButton = this._cardElement.querySelector(
-      ".card__delete-button",
-    );
+    this._deleteButton = this._cardElement.querySelector(".card__delete-button");
 
-    // Fill the card with its data
+    // Fill the card with its data.
     this._cardTitle.textContent = this._name;
     this._cardImage.src = this._link;
     this._cardImage.alt = this._name;
 
-    // Add all card event listeners
     this._setEventListeners();
 
-    // Return the completed card so it can be added to the page
+    // Return the completed card so Section can add it to the page.
     return this._cardElement;
   }
 }

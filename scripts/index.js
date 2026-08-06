@@ -1,69 +1,87 @@
-import { DefaultCard, initialCards } from "./Cards.js";
-import { openModal, closeModal } from "./utils.js";
-import { FormValidator, config } from "./FormValidator.js";
+import Card from "../components/Card.js";
 import Section from "../components/Section.js";
-import Popup from "../components/Popup.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+import PopupWithForm from "../components/PopupWithForm.js";
+import UserInfo from "../components/UserInfo.js";
+import { FormValidator, config } from "../components/FormValidator.js";
+import { initialCards } from "./constants.js";
 
-// container where the cards will live.
-const cardsContainer = document.querySelector(".cards__list");
-// new card();
-const addCardBtn = document.querySelector(".profile__add-button");
-const addCardModal = document.querySelector("#new-card-popup");
-const addCardForm = addCardModal.querySelector("#new-card-form");
-const cardNameInput = addCardModal.querySelector(
-  ".popup__input.popup__input_type_card-name",
-);
-const cardLinkInput = addCardModal.querySelector(
-  ".popup__input.popup__input_type_url",
-);
+// Buttons that open form popups. The popup classes handle closing internally.
+const editProfileButton = document.querySelector(".profile__edit-button");
+const addCardButton = document.querySelector(".profile__add-button");
 
-// testing the popup class
-// const formPopup = new Popup("#new-card-popup");
-// formPopup.setEventListeners();
-// addCardBtn.addEventListener("click", () => formPopup.open());
+// Form validators. These control input errors and submit-button state.
+const editProfileFormValidator = new FormValidator(config, "#edit-profile-form");
+const newCardFormValidator = new FormValidator(config, "#new-card-form");
+editProfileFormValidator.setEventListeners();
+newCardFormValidator.setEventListeners();
 
-addCardBtn.addEventListener("click", () => openModal(addCardModal));
-addCardForm.addEventListener("submit", handleCardFormSubmit);
+// UserInfo reads and updates the profile text on the page.
+const userInfo = new UserInfo({
+  nameSelector: ".profile__title",
+  descriptionSelector: ".profile__description",
+});
 
-// instanciating the card class to render initial items
+// Image popup. Cards will open this through the callback passed to Card.
+const imagePopup = new PopupWithImage("#image-popup");
+imagePopup.setEventListeners();
+
+function createCard(cardData) {
+  // Card receives a callback instead of importing or knowing PopupWithImage.
+  const card = new Card(cardData, "#card-template", (clickedCardData) => {
+    imagePopup.open(clickedCardData);
+  });
+
+  return card.generateCard();
+}
+
+// Section renders the initial cards and adds new card elements to the page.
 const cardSection = new Section(
   {
     items: initialCards,
-    renderer: (item) => {
-      const card = new DefaultCard(item, "#card-template");
-      const cardDOMElement = card.generateCard();
-      cardsContainer.append(cardDOMElement);
+    renderer: (cardData) => {
+      cardSection.addItem(createCard(cardData));
     },
   },
   ".cards__list",
 );
 
-cardSection.renderInitialItems();
+cardSection.renderItems();
 
-function handleCardFormSubmit(e) {
-  e.preventDefault();
-  const cardInfo = { name: cardNameInput.value, link: cardLinkInput.value };
-  renderCard(cardInfo);
-  // closeModal(addCardModal);
-  formPopup.close();
-}
+// Profile form popup. PopupWithForm collects inputs and sends them here.
+const editProfilePopup = new PopupWithForm("#edit-popup", (inputValues) => {
+  userInfo.setUserInfo({
+    name: inputValues.name,
+    description: inputValues.description,
+  });
 
-function renderCard(info) {
-  const card = new DefaultCard(info, "#card-template");
-  const cardDOMElement = card.generateCard();
-  const cardsContainer = document.querySelector(".cards__list");
-  cardsContainer.append(cardDOMElement);
-}
+  editProfilePopup.close();
+  editProfileFormValidator.resetValidation();
+});
+editProfilePopup.setEventListeners();
 
-// // render initial cards using functions
-// initialCards.forEach((item) => {
-//   const card = new DefaultCard(item, "#card-template");
-//   const cardDOMElement = card.generateCard();
-//   cardsContainer.append(cardDOMElement);
-// });
+// New-card form popup. The form input name is "place-name", so it is mapped
+// to the card data shape expected by Card: { name, link }.
+const newCardPopup = new PopupWithForm("#new-card-popup", (inputValues) => {
+  const newCardData = {
+    name: inputValues["place-name"],
+    link: inputValues.link,
+  };
 
-//enable forms validation
-const profileForm = new FormValidator(config, "#edit-profile-form");
-profileForm.setEventListeners();
-const newCardForm = new FormValidator(config, "#new-card-form");
-newCardForm.setEventListeners();
+  cardSection.addItem(createCard(newCardData));
+  newCardPopup.close();
+  newCardFormValidator.resetValidation();
+});
+newCardPopup.setEventListeners();
+
+editProfileButton.addEventListener("click", () => {
+  // Prefill the form with the current profile info before opening it.
+  editProfilePopup.setInputValues(userInfo.getUserInfo());
+  editProfileFormValidator.resetValidation();
+  editProfilePopup.open();
+});
+
+addCardButton.addEventListener("click", () => {
+  newCardFormValidator.resetValidation();
+  newCardPopup.open();
+});

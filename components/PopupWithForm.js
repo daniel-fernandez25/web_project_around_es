@@ -2,39 +2,53 @@ import Popup from "./Popup.js";
 
 class PopupWithForm extends Popup {
   constructor(popupSelector, handleFormSubmit) {
-    super(popupSelector); // popup selector comes from the parent class to help access what's in popup.
-    // The controller funct which will be used for handling the submit
+    super(popupSelector);
+
+    // Store the external callback that decides what to do with submitted data.
     this._handleFormSubmit = handleFormSubmit;
-    // storing the form - can be used to store form elements
+
+    // Store the form and its inputs because this form popup reuses them.
     this._form = this._popup.querySelector(".popup__form");
-    // form input list which will be used to get the user inputs and then send to the call back
     this._inputList = this._form.querySelectorAll(".popup__input");
   }
 
   _getInputValues() {
     const inputValues = {};
 
+    // Use each input's name attribute as the object key.
     this._inputList.forEach((input) => {
       inputValues[input.name] = input.value;
     });
+
     return inputValues;
   }
 
+  setInputValues(values) {
+    // Optional helper used for edit-profile: it fills the form before opening.
+    this._inputList.forEach((input) => {
+      if (values[input.name] !== undefined) {
+        input.value = values[input.name];
+      }
+    });
+  }
+
   setEventListeners() {
-    // The actions to execute when submitting the form will come from
-    // a external controller function
+    // PopupWithForm handles the submit event, collects clean form data, then
+    // sends that data to the callback from index.js.
     this._form.addEventListener("submit", (evt) => {
       evt.preventDefault();
-
-      const inputValues = this._getInputValues();
-      // this will trigger an action once we have data, e,g,. changing the profile info
-      this._handleFormSubmit(inputValues);
+      this._handleFormSubmit(this._getInputValues());
     });
+
+    // Reuse the parent listeners for close button, overlay, and Escape behavior.
     super.setEventListeners();
   }
 
   close() {
+    // Reuse parent close behavior, then reset this form.
     super.close();
     this._form.reset();
   }
 }
+
+export default PopupWithForm;

@@ -1,31 +1,21 @@
 class Section {
   constructor({ items, renderer }, containerSelector) {
-    ((this._items = items),
-      (this._renderer = renderer),
-      (this._container = document.querySelector(containerSelector)));
+    // items = initial data to render.
+    // renderer = callback that knows how to create and add each item.
+    this._items = items;
+    this._renderer = renderer;
+    this._container = document.querySelector(containerSelector);
   }
 
-  // clears a container
-  clear() {
-    this._container.innerHTML = "";
-  }
-
-  // first clears a container and then render initial items
-  renderInitialItems() {
-    this.clear();
-
-    // this._items is the initial items info passed when the class is
-    // instantiated.
+  renderItems() {
+    // Render every initial item using the callback received in the constructor.
     this._items.forEach((item) => {
-      // this._renderer is an arrow function that provides instructions on
-      // how to render the items. This function is passed when the class is
-      // instantiated
       this._renderer(item);
     });
   }
 
-  // method that appends one item to a container
   addItem(element) {
+    // Add a DOM element to the section container.
     this._container.append(element);
   }
 }

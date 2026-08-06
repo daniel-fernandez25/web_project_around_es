@@ -1,52 +1,44 @@
 class Popup {
   constructor(popupSelector) {
+    // Store the popup element once. The selector is stable for this instance.
     this._popup = document.querySelector(popupSelector);
+
+    // Bind the method so `this` still points to this Popup instance when the
+    // browser calls the method later as an event handler.
     this._handleEscClose = this._handleEscClose.bind(this);
-    this._overlayCloseModal = this._overlayCloseModal.bind(this);
   }
 
   open() {
-    console.log("opened from Popup class ");
-    console.log(this._popup);
-    // opens the popup
+    // Open this popup and start listening for Escape only while it is open.
     this._popup.classList.add("popup_is-opened");
-    // only adds the event listener when the popup opens
-    window.addEventListener("keydown", this._handleEscClose);
+    document.addEventListener("keydown", this._handleEscClose);
   }
 
   close() {
-    console.log("closed from Popup class ");
-    // closes the popup
+    // Close this popup and remove the Escape listener to avoid unnecessary
+    // listeners when no popup is open.
     this._popup.classList.remove("popup_is-opened");
-    window.removeEventListener("keydown", this._handleEscClose);
+    document.removeEventListener("keydown", this._handleEscClose);
   }
 
   _handleEscClose(evt) {
-    console.log("closed from Popup class ");
+    // Close this popup when the user presses Escape.
     if (evt.key === "Escape") {
-      // selects the opened modal and closes it
-      this.close();
-    }
-  }
-
-  _overlayCloseModal(evt) {
-    console.log("closed from Popup class ");
-    // evt.currentTarget → the element with the listener (the modal)
-    // evt.target → the exact element clicked (could be inside the popup)
-    const modal = evt.currentTarget;
-    // Close only if the user clicks directly on the overlay, not inside the popup
-    if (evt.target === modal) {
       this.close();
     }
   }
 
   setEventListeners() {
+    // Use one click listener for both close-button clicks and overlay clicks.
     this._popup.addEventListener("click", (evt) => {
-      if (evt.target.classList.contains("popup__close")) {
+      if (
+        evt.target.classList.contains("popup__close") ||
+        evt.target === this._popup
+      ) {
         this.close();
       }
     });
-    this._popup.addEventListener("click", this._overlayCloseModal);
   }
 }
+
 export default Popup;
