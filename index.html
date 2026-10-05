@@ -18,15 +18,25 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+          <div class="profile__pic-container">
+            <button
+              class="profile__image-button"
+              type="button"
+              aria-label="Edit profile picture"
+            >
+              <img class="profile__image" src="" alt="Avatar" />
+              <span class="profile__image-overlay"></span>
+            </button>
+          </div>
+
           <div class="profile__info">
-            <h1 class="profile__title">Jacques Cousteau</h1>
+            <h1 class="profile__title"></h1>
             <button
               aria-label="Editar perfil"
               class="profile__edit-button"
               type="button"
             ></button>
-            <p class="profile__description">Explorador</p>
+            <p class="profile__description"></p>
           </div>
           <button
             aria-label="Agregar tarjeta"
@@ -42,6 +52,38 @@
       <footer class="footer page__section">
         <p class="footer__copyright">© 2025 Around The U.S.</p>
       </footer>
+
+      <div class="popup" id="profile-pic-popup">
+        <div class="popup__content">
+          <button
+            aria-label="Cerrar ventana emergente"
+            class="popup__close"
+            type="button"
+          ></button>
+          <h3 class="popup__title">Cambiar foto de perfil</h3>
+          <form class="popup__form" id="edit-profile-pic-form" novalidate>
+            <input
+              class="popup__input popup__input_type_profile-pic"
+              name="avatar"
+              id="profile-pic-link"
+              placeholder="new pic link"
+              type="url"
+              required
+            />
+            <span
+              class="profile-pic-link-input-error popup__input-error"
+            ></span>
+
+            <button
+              class="button popup__button popup__button-submit"
+              type="submit"
+              disabled
+            >
+              Guardar
+            </button>
+          </form>
+        </div>
+      </div>
 
       <div class="popup" id="edit-popup">
         <div class="popup__content">
@@ -128,6 +170,24 @@
         </div>
       </div>
 
+      <div class="popup" id="remove-card-popup">
+        <div class="popup__content popup__delete-card">
+          <button
+            aria-label="Cerrar ventana emergente"
+            class="popup__close"
+            type="button"
+            novalidate
+          ></button>
+          <h3 class="popup__title">Estás seguro?</h3>
+
+          <button
+            class="button popup__button popup__button-submit popup__button-delete"
+          >
+            Sí
+          </button>
+        </div>
+      </div>
+
       <div class="popup" id="image-popup">
         <div class="popup__content popup__content_content_image">
           <button
@@ -140,6 +200,27 @@
         </div>
       </div>
     </div>
+
+    <div
+      class="notification notification_type_error"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <span class="notification__icon" aria-hidden="true">!</span>
+
+      <div class="notification__content">
+        <p class="notification__title">Algo salió mal</p>
+        <p class="notification__message"></p>
+      </div>
+
+      <button
+        class="notification__close"
+        type="button"
+        aria-label="Cerrar notificación"
+      ></button>
+    </div>
+
     <template id="card-template">
       <li class="card">
         <img class="card__image" src="" alt="" />

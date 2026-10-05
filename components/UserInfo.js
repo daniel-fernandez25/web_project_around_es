@@ -1,8 +1,9 @@
 class UserInfo {
-  constructor({ nameSelector, descriptionSelector }) {
+  constructor({ nameSelector, descriptionSelector, avatarSelector }) {
     // Store the profile elements that will be read and updated.
     this._nameElement = document.querySelector(nameSelector);
     this._descriptionElement = document.querySelector(descriptionSelector);
+    this._avatar = document.querySelector(avatarSelector);
   }
 
   getUserInfo() {
@@ -17,6 +18,18 @@ class UserInfo {
     // Update the profile values on the page.
     this._nameElement.textContent = name;
     this._descriptionElement.textContent = description;
+  }
+
+  saveUserId(id) {
+    this._id = id;
+  }
+
+  getUserId() {
+    return this._id;
+  }
+
+  setAvatar({ avatar }) {
+    this._avatar.src = avatar;
   }
 }
 

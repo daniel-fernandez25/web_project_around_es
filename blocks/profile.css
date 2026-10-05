@@ -6,6 +6,40 @@
   padding: 40px 0 32px;
 }
 
+.profile__pic-container {
+  margin-right: 29px;
+}
+
+/* profile pic image button*/
+.profile__image-button {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+/*profile pic overlay*/
+.profile__image-overlay {
+  background: rgb(0 0 0 / 80%) url("../images/edit-icon.svg") center no-repeat;
+  background-size: 26px 26px;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  /* Adds a smooth 0.35-second fade effect when the opacity changes */
+  transition: opacity 0.35s ease;
+}
+
+.profile__image-button:hover .profile__image-overlay,
+.profile__image-button:focus-visible .profile__image-overlay {
+  opacity: 1;
+}
+
 .profile__info {
   display: grid;
   grid-template-areas:
@@ -43,7 +77,6 @@
   border-radius: 50%;
   object-fit: cover;
   background-position: center;
-  margin-right: 29px;
 }
 
 .profile__add-button {

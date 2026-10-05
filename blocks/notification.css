@@ -1,0 +1,117 @@
+.notification {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+
+  box-sizing: border-box;
+  width: min(380px, calc(100vw - 48px));
+  min-height: 88px;
+  padding: 16px;
+
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 28px;
+  align-items: start;
+  gap: 12px;
+
+  font-family: "Inter", Arial, sans-serif;
+  color: #fff;
+  background-color: #202124;
+  border-left: 4px solid transparent;
+  border-radius: 6px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+
+.notification_is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+
+  transition-delay: 0s;
+}
+
+.notification_type_error {
+  border-left-color: #ff5c5c;
+}
+
+.notification__icon {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #fff;
+  background-color: #c93636;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.notification__content {
+  min-width: 0;
+}
+
+.notification__title {
+  margin: 0 0 6px;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.notification__message {
+  margin: 0;
+  color: #d7d7d7;
+  font-size: 14px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.notification__close {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent url("../images/close.svg") center / 12px 12px
+    no-repeat;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.notification__close:hover {
+  opacity: 1;
+}
+
+.notification__close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media screen and (max-width: 600px) {
+  .notification {
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    left: 16px;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification {
+    transform: none;
+    transition: none;
+  }
+}
