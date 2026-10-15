@@ -39,6 +39,9 @@ jobs:
             fi
           done
 
+          # Fix asset paths in the deployed HTML only
+          sed -i 's|="../|="./|g' dist/index.html
+
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
